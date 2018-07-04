@@ -1,14 +1,18 @@
 #!/usr/bin/env bash
 set -e
-#ALGORITMO PARA DESCARGAS DE MERIT DEM [Multi-Error-Removed Improved-Terrain DEM]
+#ALGORITMO PARA DESCARGAS DE MERIT DEM [Multi-Error-Removed Improved-Terrain DEM] [SCRAPER]
+#Primera versión: 2018-07-04
+#=================================================================================#
 #Parámetros de entrada
-#north,east coordenadas  centro lower left pixel (multiplos de 5)
-url="http://hydro.iis.u-tokyo.ac.jp/~yamadai/MERIT_DEM/distribute/v1.0.2/5deg/" #n70e095_dem.tif
-dir_output=MDET
-while getopts "n:e:O:" opt; do
+#north,east coordenadas - centro lower left pixel (deben ser multiplos de 5) -
+url="http://hydro.iis.u-tokyo.ac.jp/~yamadai/MERIT_DEM/distribute/v1.0.2/5deg/" 
+dir_output=MDET #directorio donde se descargará archivo .tif 
+user=usuario #usuario dado por administradores de sitio
+password=pass #pass dado por administradores de sitio
+while getopts "n:e:O:u:p:" opt; do
   case $opt in
     n)
-	  north=$OPTARG
+	  north=$OPTARG 
       ;;
     e)
 	  east=$OPTARG
@@ -16,10 +20,18 @@ while getopts "n:e:O:" opt; do
     O)
 	  dir_output=$OPTARG
       ;;
+      
+    u)
+	  user=$OPTARG
+      ;;
+      
+    p)
+	  password=$OPTARG
+      ;;
    esac
 done
 #======================================================================#
-#Funciones
+#Funciones de procedimiento
 function unsign
 {
 	echo "$1" | cut -d- -f2
@@ -63,11 +75,14 @@ function check_file_exist
 function get_merit
 {
 	catch="$url/$file"; outfile="$dir_output/$file";
-	wget $url --user=$user -P $product/$FILE
+	wget $url --user=$user --password=$pass -P $product/$FILE
 }
 #=======================================================================
-#Procedimiento.
+#Estructura de Procedimiento
+#a. Toma coordenadas de entrada y transforma a formato de patrón de archivo (para búsqueda y captura)
 coors $north y
 coors $east x
+#b. Evalúa si el archivo ya existe en el sistema, en la carpeta de salida especificada en dir_output
 check_file_exist
+#c. En caso de no existir descarga
 get_merit
