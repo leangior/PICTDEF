@@ -66,11 +66,11 @@ function coors
 }
 function check_pars
 {
-	if  [ -z "$north" ] || [-z "$south" ]; then echo "debe ingresar coordenadas norte y sur"; exit 1; fi
+	if  [ -z "$north" ] || [-z "$south" ]; then echo "debe ingresar coordenadas norte y sur. Sintaxis: get_merit_dem.sh -n (latitud norte) -e (latitud este) -d [dir_output]"; exit 1; fi
 }
 function check_file_exist
 {
-	if [ -f $dir_output/$file ]; then echo "archivo exitente en $dir_output. Saliendo"; exit 3; fi
+	if [ -f $dir_output/$file ]; then echo "archivo exitente en $dir_output. Saliendo"; exit 2; fi
 }
 function get_merit
 {
